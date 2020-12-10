@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Apod() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    getData();
+  });
 
   const getData = async () => {
     const rawData = await fetch(
       "https://api.nasa.gov/planetary/apod?api_key=1DUyIPZRNvevTAO9w0v3tShxDK2zjbdny8B4Asp4"
     );
-    const data = await rawData.json();
+    const recivedData = await rawData.json();
+    setData(recivedData);
   };
 
   return (
     <>
-      <p>hello</p>
+      <p>{data}</p>
     </>
   );
 }
