@@ -28,13 +28,28 @@ export default function Apod() {
     <>
       <Wrapper>
         <Heading>{title}</Heading>
-        <Day>Picture of the day - {date}</Day>
-        <Expl>{explanation}</Expl>
-        <img src={url} alt="Apod img of the Day" />
+        <ContentWrapper>
+          <Image src={url} alt="Apod img of the Day" />
+          <div>
+            <Day>Picture of the day - {date}</Day>
+            <Expl>{explanation}</Expl>
+          </div>
+        </ContentWrapper>
       </Wrapper>
     </>
   );
 }
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px;
+`;
+
+const Image = styled.img`
+  width: 400px;
+`;
 
 const Wrapper = styled.div`
   width: 95%;
@@ -47,7 +62,7 @@ const Wrapper = styled.div`
 const Expl = styled.p`
   font-size: 20px;
   text-align: justify;
-  width: 90%;
+  width: 500px;
   margin: 0 auto;
 `;
 
