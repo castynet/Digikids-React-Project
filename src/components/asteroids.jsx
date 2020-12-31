@@ -8,21 +8,37 @@ export default function Asteroids() {
     getData();
   }, []);
 
+  function randomPage() {
+    return Math.floor(Math.random() * 2044) + 1;
+  }
+
   const getData = async () => {
     const rawData = await fetch(
-      "https://www.neowsapp.com/rest/v1/neo/browse?page=2044&size=12&api_key=1DUyIPZRNvevTAO9w0v3tShxDK2zjbdny8B4Asp4"
+      `https://www.neowsapp.com/rest/v1/neo/browse?page=${randomPage()}&size=12&api_key=1DUyIPZRNvevTAO9w0v3tShxDK2zjbdny8B4Asp4`
     );
     const recivedData = await rawData.json();
-    console.log(recivedData.near_earth_objects);
     setData(recivedData.near_earth_objects);
   };
+
+  function isBad(hazardous) {
+    if (hazardous === true) {
+      return "Dangerous";
+    } else if (hazardous === false) {
+      return "Fine";
+    } else {
+      return "Unknown";
+    }
+  }
 
   return (
     <>
       <ComponentTitle>Below are a few recent Asteroids</ComponentTitle>
       <AsteroidsWrap>
         {data.map((asteroid) => (
-          <Wrapper key={asteroid.id}>
+          <Wrapper
+            key={asteroid.id}
+            bad={asteroid.is_potentially_hazardous_asteroid}
+          >
             <Title>Name: {asteroid.designation}</Title>
             <Diameter>
               Diameter:{" "}
@@ -31,12 +47,20 @@ export default function Asteroids() {
             <LastSeen>
               Last seen: {asteroid.orbital_data.last_observation_date}
             </LastSeen>
+            <Status>
+              The Asteroid is{" "}
+              {isBad(asteroid.is_potentially_hazardous_asteroid)}
+            </Status>
           </Wrapper>
         ))}
       </AsteroidsWrap>
     </>
   );
 }
+
+const Status = styled.p`
+  text-align: left;
+`;
 
 const ComponentTitle = styled.h1`
   margin-top: 20px;
@@ -50,7 +74,7 @@ const AsteroidsWrap = styled.div`
 `;
 
 const Wrapper = styled.div`
-  border: solid 2px #0f0;
+  border: solid 2px ${(props) => (props.bad ? "#f00" : "#0f0")};
   margin: 10px;
   padding: 20px;
   border-radius: 5px;
